@@ -1,0 +1,11 @@
+{
+  "extend": "stylelint-config-recommended",
+  "plugins": [
+       "stylelint-order"
+   ],
+  "rules": {
+    "number-leading-zero": "never",
+    "indentation": [ 2, { "severity": "warning" }],
+    "order/properties-alphabetical-order": [ true, { "severity": "warning" } ]
+  }
+}
