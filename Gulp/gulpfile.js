@@ -6,7 +6,7 @@ const allSassDirectories = 'src/styles/sass/**/*.scss';
 
 gulp.task('sass', () => {
   return gulp.src(sassDirectory)
-    .pipe(sass())
+    .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
     .pipe(gulp.dest(stylesDirectory));
 });
 
