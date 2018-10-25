@@ -10,7 +10,7 @@ const sass = require('gulp-sass');
 const uglify = require('gulp-uglify');
 
 gulp.task('html', () => {
-  gulp.src('src/*.html')
+  gulp.src('src/**/*.html')
     .pipe(headerfooter.header('src/partials/header.html'))
     .pipe(headerfooter.footer('src/partials/footer.html'))
     .pipe(gulp.dest('dist'))
@@ -18,13 +18,18 @@ gulp.task('html', () => {
 });
 
 gulp.task('images', () => {
-  gulp.src('src/images/*').pipe(imagemin()).pipe(gulp.dest('dist/images'));
+  gulp.src('src/images/**/*')
+    .pipe(imagemin())
+    .pipe(gulp.dest('dist/images'))
+    .pipe(livereload());
 });
 
 gulp.task('sass', () => {
-  return gulp.src('src/styles/*.scss')
+  return gulp.src('src/styles/**/*.scss')
+    .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
+    .pipe(gulp.dest('dist/styles'))
     .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
-    .pipe(rename(function(path) {
+    .pipe(rename((path) => {
       path.extname = '.min.css'
     }))
     .pipe(gulp.dest('dist/styles'))
@@ -32,34 +37,35 @@ gulp.task('sass', () => {
 });
 
 gulp.task('scripts', () => {
-  gulp.src('src/scripts/*.js')
-    .pipe(uglify().on('error', function() { log.error('test'); }))
-    .pipe(rename(function(path) {
+  gulp.src('src/scripts/**/*.js')
+    .pipe(gulp.dest('dist/scripts'))
+    .pipe(uglify().on('error', () => { log.error('Scripts failed to minify'); }))
+    .pipe(rename((path) => {
       path.extname = '.min.js'
     }))
     .pipe(gulp.dest('dist/scripts'))
     .pipe(livereload());
 });
 
+gulp.task('serve', ['uri', 'watch'], () => {
+  gulp.start('server');
+});
+
 gulp.task('server', () => {
   return run('node index.js').exec();
 });
 
-gulp.task('uri', function(){
+gulp.task('uri', () => {
   gulp.src(__filename)
     .pipe(open({uri: 'http://localhost:3000'}));
 });
 
 gulp.task('watch', ['scripts', 'sass', 'html', 'images'], () => {
-  gulp.watch('src/scripts/*.js', ['scripts']);
-  gulp.watch('src/styles/*.scss', ['sass']);
-  gulp.watch('src/**/*.html', ['html']);
-  gulp.watch('src/images/*', ['images']);
-});
-
-gulp.task('serve', ['uri', 'watch'], () => {
   livereload.listen();
-  gulp.start('server');
+  gulp.watch('src/scripts/**/*.js', ['scripts']);
+  gulp.watch('src/styles/**/*.scss', ['sass']);
+  gulp.watch('src/**/*.html', ['html']);
+  gulp.watch('src/images/**/*', ['images']);
 });
 
 gulp.task('default', ['serve']);
