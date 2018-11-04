@@ -1,3 +1,4 @@
+const babel = require('gulp-babel');
 const gulp = require('gulp');
 const headerfooter = require('gulp-headerfooter');
 const imagemin = require('gulp-imagemin');
@@ -25,7 +26,7 @@ gulp.task('images', () => {
 });
 
 gulp.task('sass', () => {
-  return gulp.src('src/styles/**/*.scss')
+  return gulp.src('src/styles/*.scss')
     .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
     .pipe(gulp.dest('dist/styles'))
     .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
@@ -38,6 +39,9 @@ gulp.task('sass', () => {
 
 gulp.task('scripts', () => {
   gulp.src('src/scripts/**/*.js')
+    .pipe(babel({
+      presets: ['@babel/env']
+    }))
     .pipe(gulp.dest('dist/scripts'))
     .pipe(uglify().on('error', () => { log.error('Scripts failed to minify'); }))
     .pipe(rename((path) => {
@@ -47,12 +51,17 @@ gulp.task('scripts', () => {
     .pipe(livereload());
 });
 
+gulp.task('assets', () => {
+  gulp.src('src/assets/**/*')
+    .pipe(gulp.dest('dist/assets'));
+});
+
 gulp.task('serve', ['uri', 'watch'], () => {
   gulp.start('server');
 });
 
 gulp.task('server', () => {
-  return run('node index.js').exec();
+  return run('nodemon index.js').exec();
 });
 
 gulp.task('uri', () => {
@@ -60,7 +69,9 @@ gulp.task('uri', () => {
     .pipe(open({uri: 'http://localhost:3000'}));
 });
 
-gulp.task('watch', ['scripts', 'sass', 'html', 'images'], () => {
+gulp.task('build', ['scripts', 'sass', 'html', 'images', 'assets']);
+
+gulp.task('watch', ['build'], () => {
   livereload.listen();
   gulp.watch('src/scripts/**/*.js', ['scripts']);
   gulp.watch('src/styles/**/*.scss', ['sass']);

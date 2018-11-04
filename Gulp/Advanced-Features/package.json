@@ -1,0 +1,30 @@
+{
+  "name": "gulpadvancedconfig",
+  "version": "1.0.0",
+  "description": "Gulp Advanced Configuration",
+  "main": "index.js",
+  "scripts": {
+    "start": "gulp",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "TabCom",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "fancy-log": "^1.3.2",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^8.0.0",
+    "gulp-headerfooter": "^1.0.3",
+    "gulp-imagemin": "^4.1.0",
+    "gulp-livereload": "^4.0.0",
+    "gulp-open": "^3.0.1",
+    "gulp-rename": "^1.4.0",
+    "gulp-run": "^1.7.1",
+    "gulp-sass": "^4.0.2",
+    "gulp-uglify": "^3.0.1"
+  },
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
