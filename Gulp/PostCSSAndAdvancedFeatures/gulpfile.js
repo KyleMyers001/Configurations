@@ -1,20 +1,23 @@
 const babel = require('gulp-babel');
 const browserSync = require('browser-sync').create();
+const cssnano = require('cssnano');
 const gulp = require('gulp');
 const headerfooter = require('gulp-headerfooter');
 const imagemin = require('gulp-imagemin');
 const postcss = require('gulp-postcss');
+const postcssimport = require('postcss-import');
 const postcssPresetEnv = require('postcss-preset-env');
 const uglify = require('gulp-uglify');
 const util = require('gulp-util');
 const postcssplugins = [
+  postcssimport,
   postcssPresetEnv({
     importFrom: './src/styles/partials/variables.css'
   })
 ];
 
 const cssminplugins = [
-  require('cssnano')
+  cssnano
 ];
 const isDevBuild = util.env.production !== true;
 
@@ -31,7 +34,7 @@ gulp.task('images', () => {
   if(!isDevBuild) {
     build = build.pipe(imagemin());
   }
-  
+
   return build.pipe(gulp.dest('dist/images'))
     .pipe(browserSync.stream());
 });
