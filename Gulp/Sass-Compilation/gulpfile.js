@@ -1,17 +1,14 @@
 const gulp = require('gulp');
 const sass = require('gulp-sass');
-const sassDirectory = 'src/styles/sass/*.scss';
-const stylesDirectory = 'src/styles';
-const allSassDirectories = 'src/styles/sass/**/*.scss';
 
 gulp.task('sass', () => {
-  return gulp.src(sassDirectory)
+  return gulp.src('src/styles/sass/*.scss')
     .pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
-    .pipe(gulp.dest(stylesDirectory));
+    .pipe(gulp.dest('src/styles'));
 });
 
 gulp.task('watch-sass', ['sass'], () => {
-  gulp.watch(allSassDirectories, ['sass']);
+  gulp.watch('src/styles/sass/**/*.scss', ['sass']);
 });
 
 gulp.task('default', ['watch-sass']);

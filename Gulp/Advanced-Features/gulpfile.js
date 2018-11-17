@@ -13,6 +13,8 @@ gulp.task('assets', () => {
     .pipe(gulp.dest('dist/assets'));
 });
 
+gulp.task('build', ['scripts', 'sass', 'html', 'images', 'assets']);
+
 gulp.task('html', () => {
   return gulp.src('src/**/*.html')
     .pipe(headerfooter.header('src/partials/header.html'))
@@ -23,6 +25,7 @@ gulp.task('html', () => {
 
 gulp.task('images', () => {
   let build = gulp.src('src/images/**/*');
+
   if(!isDevBuild) {
     build = build.pipe(imagemin());
   }
@@ -32,7 +35,8 @@ gulp.task('images', () => {
 });
 
 gulp.task('sass', () => {
-  let build = gulp.src('src/styles/*.scss')
+  let build = gulp.src('src/styles/*.scss');
+
   if (!isDevBuild) {
     build = build.pipe(sass({ outputStyle: 'compressed' }).on('error', sass.logError))
   }
@@ -66,8 +70,6 @@ gulp.task('serve', ['watch'], () => {
     server: './dist'
   });
 });
-
-gulp.task('build', ['scripts', 'sass', 'html', 'images', 'assets']);
 
 gulp.task('watch', ['build'], () => {
   gulp.watch('src/scripts/**/*.js', ['scripts']);
